@@ -69,6 +69,13 @@ export default function Login() {
     setErrorMessage('');
   };
 
+  const fillAdminAccount = () => {
+    setIsRegisterMode(false);
+    setEmail('admin@ebook.edu');
+    setPassword('admin123');
+    setErrorMessage('');
+  };
+
   return (
     <div className="login-page-container">
       {/* LEFT COLUMN: Blue Promotional Hero Panel with Tablet Illustration */}
@@ -270,15 +277,26 @@ export default function Login() {
               )}
             </button>
 
-            {/* One-click Demo Button */}
-            <button
-              type="button"
-              className="btn-demo-fill"
-              onClick={fillDemoAccount}
-              title="Click to quickly fill Sharini's default credentials"
-            >
-              Demo: Login as Sharini
-            </button>
+            {/* Demo Buttons */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <button
+                type="button"
+                className="btn-demo-fill"
+                onClick={fillDemoAccount}
+                title="Click to quickly fill Sharini's student credentials"
+              >
+                🎓 Student: Sharini
+              </button>
+              <button
+                type="button"
+                className="btn-demo-fill"
+                onClick={fillAdminAccount}
+                style={{ borderColor: '#F59E0B', color: '#D97706', backgroundColor: '#FFFBEB' }}
+                title="Click to quickly fill Administrator credentials"
+              >
+                🛡️ Admin Login
+              </button>
+            </div>
 
             {/* Toggle Mode */}
             <div className="auth-footer-toggle">

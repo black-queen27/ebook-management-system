@@ -7,11 +7,16 @@ import {
   User, 
   Settings, 
   HelpCircle,
-  BookOpen
+  BookOpen,
+  ShieldCheck
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Sidebar({ onHelpClick }) {
+  const { user } = useAuth();
+
   const navItems = [
+    ...(user?.role === 'Admin' ? [{ name: 'Admin Portal', path: '/admin', icon: ShieldCheck }] : []),
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Library Catalog', path: '/catalog', icon: Library },
     { name: 'My Library', path: '/library', icon: Bookmark },

@@ -150,7 +150,7 @@ def init_sqlite_database():
         );
         """)
 
-        # Insert Sharini demo user
+        # Insert Sharini demo user (Student)
         cursor.execute("""
         INSERT OR IGNORE INTO users (id, name, email, password, phone, education, college, course, year_of_study, department, date_of_birth, reading_preferences, role)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -168,6 +168,26 @@ def init_sqlite_database():
             '14 August 2006',
             'Fiction,Technology,Self Development,Science,Business',
             'Student'
+        ))
+
+        # Insert Administrator demo user (Admin)
+        cursor.execute("""
+        INSERT OR IGNORE INTO users (id, name, email, password, phone, education, college, course, year_of_study, department, date_of_birth, reading_preferences, role)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            2,
+            'Administrator',
+            'admin@ebook.edu',
+            'scrypt:32768:8:1$2bQh6q0O0xLgKz8d$4f676ff3bc073fa8ffbeebf899ce69623e83955681c2e403d151cb8fe899a6cbf26c2e35a1dae7bf93f54d6faebad41a4a49fe031665a95393a5518b5b48154e',
+            '+91 98765 00000',
+            'M.L.I.Sc Library Science',
+            'Central University Library',
+            'Library Administration',
+            'Chief Librarian',
+            'Library Administration',
+            '01 January 1990',
+            'Technology,Science,Business,Self Development,Fiction',
+            'Admin'
         ))
 
         # Sample books list

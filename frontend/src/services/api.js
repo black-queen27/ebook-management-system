@@ -126,9 +126,47 @@ export const api = {
     return handleResponse(response);
   },
 
+  // Admin Book Management
+  addBook: async (bookData) => {
+    const response = await fetch(`${API_BASE_URL}/books`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(bookData),
+    });
+    return handleResponse(response);
+  },
+
+  updateBook: async (bookId, bookData) => {
+    const response = await fetch(`${API_BASE_URL}/books/${bookId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(bookData),
+    });
+    return handleResponse(response);
+  },
+
+  deleteBook: async (bookId) => {
+    const response = await fetch(`${API_BASE_URL}/books/${bookId}`, {
+      method: 'DELETE',
+    });
+    return handleResponse(response);
+  },
+
+  // Admin System Stats & Student Directory
+  getAdminStats: async () => {
+    const response = await fetch(`${API_BASE_URL}/users/admin/stats`);
+    return handleResponse(response);
+  },
+
+  getAllUsers: async () => {
+    const response = await fetch(`${API_BASE_URL}/users/all`);
+    return handleResponse(response);
+  },
+
   // Health
   checkHealth: async () => {
     const response = await fetch(`${API_BASE_URL}/health`);
     return handleResponse(response);
   },
 };
+

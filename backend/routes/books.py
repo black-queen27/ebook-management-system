@@ -84,3 +84,100 @@ def get_categories():
         'success': True,
         'categories': categories
     }), 200
+
+@books_bp.route('', methods=['POST'])
+def add_book():
+    """Add a new book to the catalog (Admin action)."""
+    data = request.get_json() or {}
+    title = data.get('title', '').strip()
+    author = data.get('author', '').strip()
+    category = data.get('category', 'Technology').strip()
+    description = data.get('description', '').strip()
+    about_text = data.get('about_text', description).strip()
+    cover_color = data.get('cover_color', '#2563EB')
+    published_year = data.get('published_year', 2024)
+    pages = data.get('pages', 300)
+    language = data.get('language', 'English')
+    file_format = data.get('file_format', 'PDF / EPUB')
+    file_size = data.get('file_size', '7.5 MB')
+    rating = data.get('rating', 4.8)
+
+    if not title or not author:
+        return jsonify({'success': False, 'message': 'Title and author are required.'}), 400
+
+    query = """
+        INSERT INTO books (title, author, category, description, about_text, cover_color, 
+                           published_year, pages, language, file_format, file_size, rating)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    args = (title, author, category, description, about_text, cover_color,
+            published_year, pages, language, file_format, file_size, rating)
+
+    from database import modify_db
+    try:
+        res = modify_db(query, args)
+        new_id = res['lastrowid']
+        new_book = query_db("SELECT * FROM books WHERE id = %s", (new_id,), one=True)
+        return jsonify({
+            'success': True,
+            'message': f'Book "{title}" added to catalog successfully!',
+            'book': new_book
+        }), 201
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Failed to add book: {str(e)}'}), 500
+
+@books_bp.route('/<int:book_id>', methods=['PUT'])
+def update_book(book_id):
+    """Update existing book details (Admin action)."""
+    data = request.get_json() or {}
+    title = data.get('title')
+    author = data.get('author')
+    category = data.get('category')
+    description = data.get('description')
+    cover_color = data.get('cover_color')
+    published_year = data.get('published_year')
+    pages = data.get('pages')
+    rating = data.get('rating')
+
+    query = """
+        UPDATE books 
+        SET title = COALESCE(%s, title),
+            author = COALESCE(%s, author),
+            category = COALESCE(%s, category),
+            description = COALESCE(%s, description),
+            about_text = COALESCE(%s, about_text),
+            cover_color = COALESCE(%s, cover_color),
+            published_year = COALESCE(%s, published_year),
+            pages = COALESCE(%s, pages),
+            rating = COALESCE(%s, rating)
+        WHERE id = %s
+    """
+    args = (title, author, category, description, description, cover_color, published_year, pages, rating, book_id)
+
+    from database import modify_db
+    try:
+        res = modify_db(query, args)
+        if res['rowcount'] == 0:
+            return jsonify({'success': False, 'message': 'Book not found or no changes made.'}), 404
+        updated = query_db("SELECT * FROM books WHERE id = %s", (book_id,), one=True)
+        return jsonify({
+            'success': True,
+            'message': 'Book updated successfully!',
+            'book': updated
+        }), 200
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Failed to update book: {str(e)}'}), 500
+
+@books_bp.route('/<int:book_id>', methods=['DELETE'])
+def delete_book(book_id):
+    """Delete a book from the catalog (Admin action)."""
+    from database import modify_db
+    try:
+        res = modify_db("DELETE FROM books WHERE id = %s", (book_id,))
+        if res['rowcount'] > 0:
+            return jsonify({'success': True, 'message': 'Book deleted from catalog successfully!'}), 200
+        else:
+            return jsonify({'success': False, 'message': 'Book not found.'}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Failed to delete book: {str(e)}'}), 500
+

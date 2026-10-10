@@ -11,6 +11,7 @@ import BookDetails from './pages/BookDetails';
 import Profile from './pages/Profile';
 import MyLibrary from './pages/MyLibrary';
 import Settings from './pages/Settings';
+import AdminPanel from './pages/AdminPanel';
 
 import './styles.css';
 
@@ -126,6 +127,14 @@ export default function App() {
             element={
               <AppLayout>
                 <Settings />
+              </AppLayout>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <AppLayout>
+                <AdminPanel />
               </AppLayout>
             }
           />

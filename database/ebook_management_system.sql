@@ -86,6 +86,21 @@ VALUES (
     '14 August 2006',
     'Fiction,Technology,Self Development,Science,Business',
     'Student'
+),
+(
+    2,
+    'Administrator',
+    'admin@ebook.edu',
+    'scrypt:32768:8:1$2bQh6q0O0xLgKz8d$4f676ff3bc073fa8ffbeebf899ce69623e83955681c2e403d151cb8fe899a6cbf26c2e35a1dae7bf93f54d6faebad41a4a49fe031665a95393a5518b5b48154e',
+    '+91 98765 00000',
+    'M.L.I.Sc Library Science',
+    'Central University Library',
+    'Library Administration',
+    'Chief Librarian',
+    'Library Administration',
+    '01 January 1990',
+    'Technology,Science,Business,Self Development,Fiction',
+    'Admin'
 );
 
 -- Insert Books (12 high-quality books matching Figma screens)

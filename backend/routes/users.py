@@ -82,3 +82,35 @@ def update_user_profile(user_id):
         }), 200
     except Exception as e:
         return jsonify({'success': False, 'message': f'Failed to update profile: {str(e)}'}), 500
+
+@users_bp.route('/all', methods=['GET'])
+def get_all_users():
+    """List all registered users/students (Admin endpoint)."""
+    users = query_db(
+        """SELECT id, name, email, phone, college, course, year_of_study, department, role, created_at 
+           FROM users ORDER BY id ASC"""
+    )
+    return jsonify({
+        'success': True,
+        'count': len(users),
+        'users': users
+    }), 200
+
+@users_bp.route('/admin/stats', methods=['GET'])
+def get_admin_stats():
+    """Retrieve system overview metrics for the Admin Dashboard."""
+    total_users_res = query_db("SELECT COUNT(*) as count FROM users WHERE role = 'Student'", one=True)
+    total_books_res = query_db("SELECT COUNT(*) as count FROM books", one=True)
+    active_loans_res = query_db("SELECT COUNT(*) as count FROM user_library WHERE reading_status = 'Currently Reading'", one=True)
+    completed_res = query_db("SELECT COUNT(*) as count FROM user_library WHERE reading_status = 'Completed'", one=True)
+
+    return jsonify({
+        'success': True,
+        'stats': {
+            'total_students': total_users_res['count'] if total_users_res else 0,
+            'total_books': total_books_res['count'] if total_books_res else 0,
+            'active_loans': active_loans_res['count'] if active_loans_res else 0,
+            'completed_reads': completed_res['count'] if completed_res else 0
+        }
+    }), 200
+
